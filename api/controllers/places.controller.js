@@ -2,7 +2,7 @@ const { PlaceModel } = require("../models/places.model")
 const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 
-exports.getPlaces = (req, res) => {
+exports.getAllPlaces = (req, res) => {
   PlaceModel
     .find()
     .populate("placeId")
@@ -13,9 +13,20 @@ exports.getPlaces = (req, res) => {
     })
 }
 
-exports.getPlacesByType = (req, res) => {
+exports.getPlacesById = (req, res) => {
   PlaceModel
-    .find({ placeType: req.params.placeType })
+    .findById(req.params.idPlace)
+    .populate("placeId")
+    .then((places) => res.json(places))
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({ msg: "Error" })
+    })
+}
+
+exports.getPlacesByParameters = (req, res) => {
+  PlaceModel
+    .find({ name: '' })
     .populate("placeId")
     .then((places) => res.json(places))
     .catch((err) => {

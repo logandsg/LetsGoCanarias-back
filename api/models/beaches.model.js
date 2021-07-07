@@ -55,7 +55,7 @@ const beachSchema = new mongoose.Schema({
   parkingSlot: {
     type: String
   },
-  toilets: {
+  toilet: {
     type: String
   },
   footWasher: {
@@ -64,7 +64,7 @@ const beachSchema = new mongoose.Schema({
   showers: {
     type: String
   },
-  paperBin: {
+  trashCan: {
     type: String
   },
   cleaningService: {
@@ -103,7 +103,7 @@ const beachSchema = new mongoose.Schema({
   composition: {
     type: String
   },
-  facadeLitoral: {
+  coastLine: {
     type: String
   },
   protectedSpace: {

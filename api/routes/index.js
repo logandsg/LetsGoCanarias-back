@@ -1,12 +1,8 @@
 const router = require('express').Router()
 
-const { getPlaces, 
-        getPlacesByType, 
-        createBeach } = require('../controllers/places.controller')
+const { placesRouter } = require('./places.router')
 
 router
-  .get('/:placeType', getPlacesByType)
-  .get('/', getPlaces)
-  .post('/', createBeach)
+  .use('/places', placesRouter)
 
 exports.router = router
