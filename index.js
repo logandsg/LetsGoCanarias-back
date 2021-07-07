@@ -1,7 +1,9 @@
+require('dotenv').config()
+const cors = require('cors')
 const express = require('express')
 const mongoose = require('mongoose')
-const api = express()
 const { router } = require('./api/routes')
+const api = express()
 
 mongoose.connect(
   process.env.MONGO_URL || 'mongodb://localhost:27017/',
@@ -20,9 +22,10 @@ mongoose.connect(
     console.log('Connected to DB')
 
     api
+      .use(cors())
       .use(express.json())
       .use('/api', router)
-      .listen(process.env.PORT || 8080, (err) => {
+      .listen(process.env.PORT || 3000, (err) => {
         console.info('\n\n' + '>'.repeat(40))
         console.info('💻  Reboot Server Live')
         console.info('📡  PORT: http://localhost:8080')
