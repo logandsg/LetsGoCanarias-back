@@ -22,10 +22,10 @@ mongoose.connect(
     api
       .use(express.json())
       .use('/api', router)
-      .listen(process.env.PORT || 8080, (err) => {
+      .listen(process.env.PORT || 3000, (err) => {
         console.info('\n\n' + '>'.repeat(40))
         console.info('💻  Reboot Server Live')
-        console.info('📡  PORT: http://localhost:8080')
+        console.info('📡  PORT: http://localhost:3000')
         console.info('>'.repeat(40) + '\n\n')
       })
   }

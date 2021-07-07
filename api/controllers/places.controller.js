@@ -2,6 +2,10 @@ const { PlaceModel } = require("../models/places.model")
 const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 
+function getSizeString(number) {
+    
+}
+
 exports.getAllPlaces = (req, res) => {
   PlaceModel
     .find()
@@ -24,11 +28,25 @@ exports.getPlacesById = (req, res) => {
     })
 }
 
-exports.getPlacesByParameters = (req, res) => {
+exports.getAllBeaches = (req, res) => {
   PlaceModel
-    .find({ name: '' })
+    .find({ placeType: 'beaches' })
     .populate("placeId")
     .then((places) => res.json(places))
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({ msg: "Error" })
+    })
+}
+
+exports.getBeachesByParameters = (req, res) => {
+  PlaceModel
+    .find()
+    .populate('placeId')
+    .then((places) => {
+      const result = places.filter(place => place.placeId.nudism === req.body.nudism || place.placeId.sandType === req.body.sandType || place.placeId.surge === req.body.surge)
+      res.json(result)
+    })
     .catch((err) => {
       console.log(err)
       res.status(500).json({ msg: "Error" })
