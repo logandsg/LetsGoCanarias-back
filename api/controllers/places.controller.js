@@ -5,11 +5,11 @@ const { RestaurantModel } = require("../models/restaurants.model")
 function getSizeString (length) {
   const number = convertLengthToNumber(length)
   if (number > 200) {
-    return 'grande'
+    return 'Grande'
   } else if (number > 60) {
-    return 'mediana'
+    return 'Mediana'
   } else {
-    return 'pequeña'
+    return 'Pequeña'
   }
 }
 
@@ -50,7 +50,6 @@ exports.getAllBeaches = (req, res) => {
       res.status(500).json({ msg: "Error" })
     })
 }
-
 exports.getBeachesByParameters = (req, res) => {
   PlaceModel
     .find({ placeType: 'beaches' })
@@ -59,18 +58,20 @@ exports.getBeachesByParameters = (req, res) => {
       let result = places.filter(function (place) {
         const beachSize = getSizeString(place.placeId.length)
 
-        const province = req.body.province ?? place.province
-        const island = req.body.island ?? place.island
-        const municipality = req.body.municipality ?? place.municipality
-        const size = req.body.size ?? beachSize
-        const sandType = req.body.sandType ?? place.placeId.sandType
-        const surge = req.body.surge ?? place.placeId.surge
+        const province = req.query.province ?? place.province
+        const island = req.query.island ?? place.island
+        const municipality = req.query.municipality ?? place.municipality
+        const size = req.query.size ?? beachSize
+        const sandType = req.query.sandType ?? place.placeId.sandType
+        const surge = req.query.surge ?? place.placeId.surge
+        const composition = req.query.composition ?? place.placeId.composition
 
-        if (province === place.province && island === place.island && municipality === place.municipality && size === beachSize && sandType === place.placeId.sandType && surge === place.placeId.surge) {
+        if (province === place.province && island === place.island && municipality === place.municipality && size === beachSize && sandType === place.placeId.sandType && surge === place.placeId.surge && composition === place.placeId.composition) {
           return true
         }
         return false
       })
+
       result = result.map(function (place) {
         const result = {
           _id: place._id,
@@ -84,12 +85,12 @@ exports.getBeachesByParameters = (req, res) => {
           spindle: place.spindle,
           coordX: place.coordX,
           coordY: place.coordY,
-          placeType: place.placeType
+          placeType: place.placeType,
+          imageUrl: place.imageUrl
         }
         return result
       })
-
-
+      console.log(result)
       res.json(result)
     })
     .catch((err) => {
@@ -149,6 +150,7 @@ exports.createBeach = (req, res) => {
       coordLatitude: req.body.coordLatitude,
       coordLength: req.body.coordLength,
       spindle: req.body.spindle,
+      imageUrl: req.body.imageUrl,
       placeType: req.body.placeType,
       placeId: beach._id
     })
