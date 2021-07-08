@@ -4,6 +4,9 @@ const placeSchema = new mongoose.Schema({
   name: {
     type: String
   },
+  municipality: {
+    type: String
+  },
   island: {
     type: String
   },

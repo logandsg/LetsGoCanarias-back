@@ -2,7 +2,7 @@ const { PlaceModel } = require("../models/places.model")
 const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 
-function getSizeString(length) {
+function getSizeString (length) {
   const number = convertLengthToNumber(length)
   if (number > 200) {
     return 'grande'
@@ -13,7 +13,7 @@ function getSizeString(length) {
   }
 }
 
-function convertLengthToNumber(length) {
+function convertLengthToNumber (length) {
   const arrStr = length.split(' ')
   return parseInt(arrStr[0])
 }
@@ -56,7 +56,7 @@ exports.getBeachesByParameters = (req, res) => {
     .find({ placeType: 'beaches' })
     .populate('placeId')
     .then((places) => {
-      const result = places.filter(function (place) {
+      let result = places.filter(function (place) {
         const beachSize = getSizeString(place.placeId.length)
 
         const province = req.body.province ?? place.province
@@ -71,6 +71,25 @@ exports.getBeachesByParameters = (req, res) => {
         }
         return false
       })
+      result = result.map(function (place) {
+        const result = {
+          _id: place._id,
+          name: place.name,
+          municipality: place.municipality,
+          island: place.island,
+          province: place.province,
+          description: place.description,
+          coordLatitude: place.coordLatitude,
+          coordLength: place.coordLength,
+          spindle: place.spindle,
+          coordX: place.coordX,
+          coordY: place.coordY,
+          placeType: place.placeType
+        }
+        return result
+      })
+
+
       res.json(result)
     })
     .catch((err) => {
@@ -81,7 +100,6 @@ exports.getBeachesByParameters = (req, res) => {
 
 exports.createBeach = (req, res) => {
   const beach = new BeachModel({
-    municipality: req.body.municipality,
     municipalWeb: req.body.municipalWeb,
     length: req.body.length,
     width: req.body.width,
@@ -122,6 +140,7 @@ exports.createBeach = (req, res) => {
   PlaceModel
     .create({
       name: req.body.name,
+      municipality: req.body.municipality,
       island: req.body.island,
       province: req.body.province,
       description: req.body.description,

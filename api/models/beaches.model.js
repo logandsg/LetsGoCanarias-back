@@ -1,9 +1,6 @@
 const mongoose = require('mongoose')
 
 const beachSchema = new mongoose.Schema({
-  municipality: {
-    type: String
-  },
   municipalWeb: {
     type: String
   },
