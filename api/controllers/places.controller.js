@@ -58,6 +58,7 @@ exports.getBeachesByParameters = (req, res) => {
       let result = places.filter(function (place) {
         const beachSize = getSizeString(place.placeId.length)
 
+        const name = req.query.name ?? place.name
         const province = req.query.province ?? place.province
         const island = req.query.island ?? place.island
         const municipality = req.query.municipality ?? place.municipality
@@ -66,7 +67,7 @@ exports.getBeachesByParameters = (req, res) => {
         const surge = req.query.surge ?? place.placeId.surge
         const composition = req.query.composition ?? place.placeId.composition
 
-        if (province === place.province && island === place.island && municipality === place.municipality && size === beachSize && sandType === place.placeId.sandType && surge === place.placeId.surge && composition === place.placeId.composition) {
+        if (name === place.name && province === place.province && island === place.island && municipality === place.municipality && size === beachSize && sandType === place.placeId.sandType && surge === place.placeId.surge && composition === place.placeId.composition) {
           return true
         }
         return false
