@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 
 const beachSchema = new mongoose.Schema({
+  imageUsersUrl: {
+    type: Array
+  },
   municipalWeb: {
     type: String
   },

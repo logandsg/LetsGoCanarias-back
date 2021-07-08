@@ -15,7 +15,7 @@ function getSizeString (length) {
 
 function convertLengthToNumber (length) {
   const arrStr = length.split(' ')
-  return parseInt(arrStr[0])
+  return parseInt(arrStr[0].replace('.', ''))
 }
 
 exports.getAllPlaces = (req, res) => {

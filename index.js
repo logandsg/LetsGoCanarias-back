@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const api = express()
+const cors = require('cors')
 const { router } = require('./api/routes')
 
 mongoose.connect(
@@ -20,6 +21,7 @@ mongoose.connect(
     console.log('Connected to DB')
 
     api
+      .use(cors())
       .use(express.json())
       .use('/api', router)
       .listen(process.env.PORT || 3000, (err) => {

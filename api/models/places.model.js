@@ -31,6 +31,12 @@ const placeSchema = new mongoose.Schema({
   spindle: {
     type: String
   },
+  rate: {
+    type: Number
+  },
+  imageUrl: {
+    type: String
+  },
   placeType: {
     type: String,
     enum: ['beaches', 'restaurants']
