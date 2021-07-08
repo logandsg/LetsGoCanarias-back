@@ -2,8 +2,20 @@ const { PlaceModel } = require("../models/places.model")
 const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 
-function getSizeString(number) {
-    
+function getSizeString(length) {
+  const number = convertLengthToNumber(length)
+  if (number > 200) {
+    return 'grande'
+  } else if (number > 60) {
+    return 'mediana'
+  } else {
+    return 'pequeña'
+  }
+}
+
+function convertLengthToNumber(length) {
+  const arrStr = length.split(' ')
+  return parseInt(arrStr[0])
 }
 
 exports.getAllPlaces = (req, res) => {
@@ -41,10 +53,24 @@ exports.getAllBeaches = (req, res) => {
 
 exports.getBeachesByParameters = (req, res) => {
   PlaceModel
-    .find()
+    .find({ placeType: 'beaches' })
     .populate('placeId')
     .then((places) => {
-      const result = places.filter(place => place.placeId.nudism === req.body.nudism || place.placeId.sandType === req.body.sandType || place.placeId.surge === req.body.surge)
+      const result = places.filter(function (place) {
+        const beachSize = getSizeString(place.placeId.length)
+
+        const province = req.body.province ?? place.province
+        const island = req.body.island ?? place.island
+        const municipality = req.body.municipality ?? place.municipality
+        const size = req.body.size ?? beachSize
+        const sandType = req.body.sandType ?? place.placeId.sandType
+        const surge = req.body.surge ?? place.placeId.surge
+
+        if (province === place.province && island === place.island && municipality === place.municipality && size === beachSize && sandType === place.placeId.sandType && surge === place.placeId.surge) {
+          return true
+        }
+        return false
+      })
       res.json(result)
     })
     .catch((err) => {
