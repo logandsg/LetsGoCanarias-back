@@ -1,5 +1,5 @@
 {
-  "name": "proyect-3",
+  "name": "proyect-solvion",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/logandsg/Project-3.git"
+    "url": "git+https://github.com/JuanPabloLeber/Proyect-Solvion.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/logandsg/Project-3/issues"
+    "url": "https://github.com/JuanPabloLeber/Proyect-Solvion/issues"
   },
-  "homepage": "https://github.com/logandsg/Project-3#readme",
+  "homepage": "https://github.com/JuanPabloLeber/Proyect-Solvion#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
