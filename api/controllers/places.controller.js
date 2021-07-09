@@ -18,6 +18,48 @@ function convertLengthToNumber (length) {
   return parseInt(arrStr[0].replace('.', ''))
 }
 
+function createBeach(req) {
+  const beach = new BeachModel({
+    municipalWeb: req.body.municipalWeb,
+    length: req.body.length,
+    width: req.body.width,
+    occupation: req.body.occupation,
+    urbanization: req.body.urbanization,
+    seaFront: req.body.seaFront,
+    sandType: req.body.sandType,
+    surge: req.body.surge,
+    zoneMarkedOut: req.body.zoneMarkedOut,
+    nudism: req.body.nudism,
+    vegetation: req.body.vegetation,
+    blueFlag: req.body.blueFlag,
+    lifeguard: req.body.lifeguard,
+    wayToAccess: req.body.wayToAccess,
+    disabledAccess: req.body.disabledAccess,
+    parking: req.body.parking,
+    parkingSlot: req.body.parkingSlot,
+    toilets: req.body.toilets,
+    footWasher: req.body.footWasher,
+    showers: req.body.showers,
+    paperBind: req.body.paperBind,
+    cleaningService: req.body.cleaningService,
+    rentalSunUmbrella: req.body.rentalSunUmbrella,
+    rentalHamocks: req.body.rentalHamocks,
+    rentalBoats: req.body.rentalBoats,
+    touristOffice: req.body.touristOffice,
+    food: req.body.food,
+    drinks: req.body.drinks,
+    childZone: req.body.childZone,
+    sportZone: req.body.sportZone,
+    scubaDiving: req.body.scubaDiving,
+    surfZone: req.body.surfZone,
+    composition: req.body.composition,
+    facadeLitoral: req.body.facadeLitoral,
+    protectedSpace: req.body.protectedSpace
+  })
+  beach.save()
+  return beach.id
+}
+
 exports.getAllPlaces = (req, res) => {
   PlaceModel
     .find()
@@ -100,45 +142,13 @@ exports.getBeachesByParameters = (req, res) => {
     })
 }
 
-exports.createBeach = (req, res) => {
-  const beach = new BeachModel({
-    municipalWeb: req.body.municipalWeb,
-    length: req.body.length,
-    width: req.body.width,
-    occupation: req.body.occupation,
-    urbanization: req.body.urbanization,
-    seaFront: req.body.seaFront,
-    sandType: req.body.sandType,
-    surge: req.body.surge,
-    zoneMarkedOut: req.body.zoneMarkedOut,
-    nudism: req.body.nudism,
-    vegetation: req.body.vegetation,
-    blueFlag: req.body.blueFlag,
-    lifeguard: req.body.lifeguard,
-    wayToAccess: req.body.wayToAccess,
-    disabledAccess: req.body.disabledAccess,
-    parking: req.body.parking,
-    parkingSlot: req.body.parkingSlot,
-    toilets: req.body.toilets,
-    footWasher: req.body.footWasher,
-    showers: req.body.showers,
-    paperBind: req.body.paperBind,
-    cleaningService: req.body.cleaningService,
-    rentalSunUmbrella: req.body.rentalSunUmbrella,
-    rentalHamocks: req.body.rentalHamocks,
-    rentalBoats: req.body.rentalBoats,
-    touristOffice: req.body.touristOffice,
-    food: req.body.food,
-    drinks: req.body.drinks,
-    childZone: req.body.childZone,
-    sportZone: req.body.sportZone,
-    scubaDiving: req.body.scubaDiving,
-    surfZone: req.body.surfZone,
-    composition: req.body.composition,
-    facadeLitoral: req.body.facadeLitoral,
-    protectedSpace: req.body.protectedSpace
-  })
-  beach.save()
+exports.createPlace = (req, res) => {
+  let newPlaceId
+  switch (req.body.placeType) {
+    case 'beaches':
+      newPlaceId = createBeach(req, res)
+      break
+  }
   PlaceModel
     .create({
       name: req.body.name,
@@ -153,7 +163,7 @@ exports.createBeach = (req, res) => {
       spindle: req.body.spindle,
       imageUrl: req.body.imageUrl,
       placeType: req.body.placeType,
-      placeId: beach._id
+      placeId: newPlaceId
     })
     .then((place) => res.json(place))
     .catch((err) => {
