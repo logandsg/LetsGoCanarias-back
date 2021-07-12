@@ -1,13 +1,14 @@
 const placesRouter = require('express').Router()
 
-const { getAllPlaces, getPlacesById, createBeach, getBeachesByParameters, getAllBeaches } = require('../controllers/places.controller')
+const { getAllPlaces, getPlaceById, postPlace, getPlacesByParameters, updatePlace } = require('../controllers/places.controller')
 
 placesRouter
 
-  .get('/beaches/search', getBeachesByParameters)
-  .get('/beaches', getAllBeaches)
-  .get('/:idPlace', getPlacesById)
+  .get('/search', getPlacesByParameters)
+  .get('/:idPlace', getPlaceById)
+  .put('/:idPlace', updatePlace)
+  //.delete('/:idPlace', deletePlace)
   .get('/', getAllPlaces)
-  .post('/beaches', createBeach)
+  .post('/', postPlace)
 
 exports.placesRouter = placesRouter
