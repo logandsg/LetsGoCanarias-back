@@ -2,31 +2,27 @@ const { PlaceModel } = require("../models/places.model")
 const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 
-function getSizeString (length) {
+function getBeachSize(length) {
+  console.log(length)
   const number = convertLengthToNumber(length)
   if (number > 200) {
-    return 'Grande'
+    return "Grande"
   } else if (number > 60) {
-    return 'Mediana'
+    return "Mediana"
   } else {
-    return 'Pequeña'
+    return "Pequeña"
   }
 }
 
 function convertLengthToNumber (length) {
-  const arrStr = length.split(' ')
-  return parseInt(arrStr[0].replace('.', ''))
-}
-
-function getOnlyPlaceData() {
-
+  const arrStr = length.split(" ")
+  return parseInt(arrStr[0].replace(".", ""))
 }
 
 exports.getAllPlaces = (req, res) => {
-  PlaceModel
-    .find()
+  PlaceModel.find()
     .populate("placeId")
-    .then((places) => res.json(places))
+    .then((places) => res.status(200).json(places))
     .catch((err) => {
       console.log(err)
       res.status(500).json({ msg: "Error" })
@@ -34,38 +30,109 @@ exports.getAllPlaces = (req, res) => {
 }
 
 exports.getPlaceById = (req, res) => {
-  PlaceModel
-    .findById(req.params.idPlace)
+  PlaceModel.findById(req.params.idPlace)
     .populate("placeId")
-    .then((places) => res.json(places))
+    .then((places) => res.status(200).json(places))
     .catch((err) => {
       console.log(err)
       res.status(500).json({ msg: "Error" })
     })
 }
 
+function filterByPlaceParameters(places, req) {
+  return places.filter(function (place) {
+    const name = req.body.name ?? place.name
+    const province = req.body.province ?? place.province
+    const island = req.body.island ?? place.island
+    const municipality = req.body.municipality ?? place.municipality
+
+    if (
+      place.name.includes(name) &&
+      province === place.province &&
+      island === place.island &&
+      municipality === place.municipality
+    ) {
+      return true
+    }
+    return false
+  })
+}
+
+function filterByBeachParameters (places, req) {
+  return places.filter(function (place) {
+    const beachSize = getBeachSize(place.placeId.length)
+    const size = req.body.size ?? beachSize
+    const occupation = req.body.occupation ?? place.placeId.occupation
+    const urbanization = req.body.urbanization ?? place.placeId.urbanization
+    const seaFront = req.body.seaFront ?? place.placeId.seaFront
+    const sandType = req.body.sandType ?? place.placeId.sandType
+    const surge = req.body.surge ?? place.placeId.surge
+    const nudism = req.body.nudism ?? place.placeId.nudism
+    const blueFlag = req.body.blueFlag ?? place.placeId.blueFlag
+    const lifeguard = req.body.lifeguard ?? place.placeId.lifeguard
+    const wayToAccess = req.body.wayToAccess ?? place.placeId.wayToAccess
+    const disabledAccess =
+      req.body.disabledAccess ?? place.placeId.disabledAccess
+    const parking = req.body.parking ?? place.placeId.parking
+    const showers = req.body.showers ?? place.placeId.showers
+    const rentalSunUmbrella =
+      req.body.rentalSunUmbrella ?? place.placeId.rentalSunUmbrella
+    const rentalHamocks = req.body.rentalHamocks ?? place.placeId.rentalHamocks
+    const rentalBoats = req.body.rentalBoats ?? place.placeId.rentalBoats
+    const food = req.body.food ?? place.placeId.food
+    const drinks = req.body.drinks ?? place.placeId.drinks
+    const childZone = req.body.childZone ?? place.placeId.childZone
+    const sportZone = req.body.sportZone ?? place.placeId.sportZone
+    const scubaDiving = req.body.scubaDiving ?? place.placeId.scubaDiving
+    const surfZone = req.body.surfZone ?? place.placeId.surfZone
+
+    if (
+      size === beachSize &&
+      occupation === place.placeId.occupation &&
+      urbanization === place.placeId.urbanization &&
+      seaFront === place.placeId.seaFront &&
+      sandType === place.placeId.sandType &&
+      surge === place.placeId.surge &&
+      nudism === place.placeId.nudism &&
+      blueFlag === place.placeId.blueFlag &&
+      lifeguard === place.placeId.lifeguard &&
+      wayToAccess === place.placeId.wayToAccess &&
+      disabledAccess === place.placeId.disabledAccess &&
+      parking === place.placeId.parking &&
+      showers === place.placeId.showers &&
+      rentalSunUmbrella === place.placeId.rentalSunUmbrella &&
+      rentalHamocks === place.placeId.rentalHamocks &&
+      rentalBoats === place.placeId.rentalBoats &&
+      food === place.placeId.food &&
+      drinks === place.placeId.drinks &&
+      childZone === place.placeId.childZone &&
+      sportZone === place.placeId.sportZone &&
+      scubaDiving === place.placeId.scubaDiving &&
+      surfZone === place.placeId.surfZone
+    ) {
+      return true
+    }
+    return false
+  })
+}
+
 exports.getPlacesByParameters = (req, res) => {
-  PlaceModel
-    .find({ placeType: req.body.placeType })
-    .populate('placeId')
+  let findParameters = {}
+  if (req.body.placeType) {
+    findParameters = { placeType: req.body.placeType }
+  }
+
+  PlaceModel.find(findParameters)
+    .populate("placeId")
     .then((places) => {
-      let result = places.filter(function (place) {
-        const beachSize = getSizeString(place.placeId.length)
-        const name = req.query.name ?? place.name
-        const province = req.query.province ?? place.province
-        const island = req.query.island ?? place.island
-        const municipality = req.query.municipality ?? place.municipality
-        const size = req.query.size ?? beachSize
-        const sandType = req.query.sandType ?? place.placeId.sandType
-        const surge = req.query.surge ?? place.placeId.surge
-        const composition = req.query.composition ?? place.placeId.composition
-
-        if (name === place.name && province === place.province && island === place.island && municipality === place.municipality && size === beachSize && sandType === place.placeId.sandType && surge === place.placeId.surge && composition === place.placeId.composition) {
-          return true
+      let result = filterByPlaceParameters(places, req)
+      if (req.body.placeType) {
+        switch (req.body.placeType) {
+          case "beaches":
+            result = filterByBeachParameters(result, req)
+            break
         }
-        return false
-      })
-
+      }
       result = result.map(function (place) {
         const result = {
           _id: place._id,
@@ -80,12 +147,11 @@ exports.getPlacesByParameters = (req, res) => {
           coordX: place.coordX,
           coordY: place.coordY,
           placeType: place.placeType,
-          imageUrl: place.imageUrl
+          imageUrl: place.imageUrl,
         }
         return result
       })
-      console.log(result)
-      res.json(result)
+      res.status(200).json(result)
     })
     .catch((err) => {
       console.log(err)
@@ -95,7 +161,7 @@ exports.getPlacesByParameters = (req, res) => {
 
 /* ********** Post Place ************ */
 
-function createBeach (req) {
+function createBeach(req) {
   const beach = new BeachModel({
     municipalWeb: req.body.municipalWeb,
     length: req.body.length,
@@ -131,7 +197,7 @@ function createBeach (req) {
     surfZone: req.body.surfZone,
     composition: req.body.composition,
     facadeLitoral: req.body.facadeLitoral,
-    protectedSpace: req.body.protectedSpace
+    protectedSpace: req.body.protectedSpace,
   })
   beach.save()
   return beach.id
@@ -140,27 +206,26 @@ function createBeach (req) {
 exports.postPlace = (req, res) => {
   let newPlaceId
   switch (req.body.placeType) {
-    case 'beaches':
+    case "beaches":
       newPlaceId = createBeach(req, res)
       break
   }
-  PlaceModel
-    .create({
-      name: req.body.name,
-      municipality: req.body.municipality,
-      island: req.body.island,
-      province: req.body.province,
-      description: req.body.description,
-      coordX: req.body.coordX,
-      coordY: req.body.coordY,
-      coordLatitude: req.body.coordLatitude,
-      coordLength: req.body.coordLength,
-      spindle: req.body.spindle,
-      imageUrl: req.body.imageUrl,
-      placeType: req.body.placeType,
-      placeId: newPlaceId
-    })
-    .then((place) => res.json(place))
+  PlaceModel.create({
+    name: req.body.name,
+    municipality: req.body.municipality,
+    island: req.body.island,
+    province: req.body.province,
+    description: req.body.description,
+    coordX: req.body.coordX,
+    coordY: req.body.coordY,
+    coordLatitude: req.body.coordLatitude,
+    coordLength: req.body.coordLength,
+    spindle: req.body.spindle,
+    imageUrl: req.body.imageUrl,
+    placeType: req.body.placeType,
+    placeId: newPlaceId,
+  })
+    .then((place) => res.status(200).json(place))
     .catch((err) => {
       console.log(err)
       res.status(500).json({ msg: "Error" })
@@ -169,55 +234,53 @@ exports.postPlace = (req, res) => {
 
 /* ********** update Place ************ */
 
-function updateBeach (beachId, req) {
-  BeachModel
-    .findById(beachId)
-    .then((beach) => {
-      beach.municipalWeb = req.body.municipalWeb ?? beach.municipalWeb
-      beach.length = req.body.length ?? beach.length
-      beach.width = req.body.width ?? beach.width
-      beach.occupation = req.body.occupation ?? beach.occupation
-      beach.urbanization = req.body.urbanization ?? beach.urbanization
-      beach.seaFront = req.body.seaFront ?? beach.seaFront
-      beach.sandType = req.body.sandType ?? beach.sandType
-      beach.surge = req.body.surge ?? beach.surge
-      beach.zoneMarkedOut = req.body.zoneMarkedOut ?? beach.zoneMarkedOut
-      beach.nudism = req.body.nudism ?? beach.nudism
-      beach.vegetation = req.body.vegetation ?? beach.vegetation
-      beach.blueFlag = req.body.blueFlag ?? beach.blueFlag
-      beach.lifeguard = req.body.lifeguard ?? beach.lifeguard
-      beach.wayToAccess = req.body.wayToAccess ?? beach.wayToAccess
-      beach.disabledAccess = req.body.disabledAccess ?? beach.disabledAccess
-      beach.parking = req.body.parking ?? beach.parking
-      beach.parkingSlot = req.body.parkingSlot ?? beach.parkingSlot
-      beach.toilets = req.body.toilets ?? beach.toilets
-      beach.footWasher = req.body.footWasher ?? beach.footWasher
-      beach.showers = req.body.showers ?? beach.showers
-      beach.paperBind = req.body.paperBind ?? beach.paperBind
-      beach.cleaningService = req.body.cleaningService ?? beach.cleaningService
-      beach.rentalSunUmbrella = req.body.rentalSunUmbrella ?? beach.rentalSunUmbrella
-      beach.rentalHamocks = req.body.rentalHamocks ?? beach.rentalHamocks
-      beach.rentalBoats = req.body.rentalBoats ?? beach.rentalBoats
-      beach.touristOffice = req.body.touristOffice ?? beach.touristOffice
-      beach.food = req.body.food ?? beach.food
-      beach.drinks = req.body.drinks ?? beach.drinks
-      beach.childZone = req.body.childZone ?? beach.childZone
-      beach.sportZone = req.body.sportZone ?? beach.sportZone
-      beach.scubaDiving = req.body.scubaDiving ?? beach.scubaDiving
-      beach.surfZone = req.body.surfZone ?? beach.surfZone
-      beach.composition = req.body.composition ?? beach.composition
-      beach.facadeLitoral = req.body.facadeLitoral ?? beach.facadeLitoral
-      beach.protectedSpace = req.body.protectedSpace ?? beach.protectedSpace
-      beach.save()
-    })
+function updateBeach(beachId, req) {
+  BeachModel.findById(beachId).then((beach) => {
+    beach.municipalWeb = req.body.municipalWeb ?? beach.municipalWeb
+    beach.length = req.body.length ?? beach.length
+    beach.width = req.body.width ?? beach.width
+    beach.occupation = req.body.occupation ?? beach.occupation
+    beach.urbanization = req.body.urbanization ?? beach.urbanization
+    beach.seaFront = req.body.seaFront ?? beach.seaFront
+    beach.sandType = req.body.sandType ?? beach.sandType
+    beach.surge = req.body.surge ?? beach.surge
+    beach.zoneMarkedOut = req.body.zoneMarkedOut ?? beach.zoneMarkedOut
+    beach.nudism = req.body.nudism ?? beach.nudism
+    beach.vegetation = req.body.vegetation ?? beach.vegetation
+    beach.blueFlag = req.body.blueFlag ?? beach.blueFlag
+    beach.lifeguard = req.body.lifeguard ?? beach.lifeguard
+    beach.wayToAccess = req.body.wayToAccess ?? beach.wayToAccess
+    beach.disabledAccess = req.body.disabledAccess ?? beach.disabledAccess
+    beach.parking = req.body.parking ?? beach.parking
+    beach.parkingSlot = req.body.parkingSlot ?? beach.parkingSlot
+    beach.toilets = req.body.toilets ?? beach.toilets
+    beach.footWasher = req.body.footWasher ?? beach.footWasher
+    beach.showers = req.body.showers ?? beach.showers
+    beach.paperBind = req.body.paperBind ?? beach.paperBind
+    beach.cleaningService = req.body.cleaningService ?? beach.cleaningService
+    beach.rentalSunUmbrella =
+      req.body.rentalSunUmbrella ?? beach.rentalSunUmbrella
+    beach.rentalHamocks = req.body.rentalHamocks ?? beach.rentalHamocks
+    beach.rentalBoats = req.body.rentalBoats ?? beach.rentalBoats
+    beach.touristOffice = req.body.touristOffice ?? beach.touristOffice
+    beach.food = req.body.food ?? beach.food
+    beach.drinks = req.body.drinks ?? beach.drinks
+    beach.childZone = req.body.childZone ?? beach.childZone
+    beach.sportZone = req.body.sportZone ?? beach.sportZone
+    beach.scubaDiving = req.body.scubaDiving ?? beach.scubaDiving
+    beach.surfZone = req.body.surfZone ?? beach.surfZone
+    beach.composition = req.body.composition ?? beach.composition
+    beach.facadeLitoral = req.body.facadeLitoral ?? beach.facadeLitoral
+    beach.protectedSpace = req.body.protectedSpace ?? beach.protectedSpace
+    beach.save()
+  })
 }
 
 exports.updatePlace = (req, res) => {
-  PlaceModel
-    .findById(req.params.idPlace)
+  PlaceModel.findById(req.params.idPlace)
     .then((place) => {
       switch (place.placeType) {
-        case 'beaches':
+        case "beaches":
           updateBeach(place.placeId, req)
           break
       }
@@ -233,8 +296,27 @@ exports.updatePlace = (req, res) => {
       place.spindle = req.body.spindle ?? place.spindle
       place.imageUrl = req.body.imageUrl ?? place.imageUrl
       place.save()
+      res.status(200).json(place)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({ msg: "Error" })
+    })
+}
 
-      res.json(place)
+/* ********** delete Place ************ */
+
+exports.deletePlace = (req, res) => {
+  PlaceModel.findByIdAndRemove(req.params.idPlace)
+    .then((place) => {
+      switch (place.placeType) {
+        case "beaches":
+          BeachModel.findByIdAndRemove(place.placeId).catch((err) => {
+            console.log(err)
+          })
+          break
+      }
+      res.status(200).json({ msg: `${place.name} has been deleted!` })
     })
     .catch((err) => {
       console.log(err)
