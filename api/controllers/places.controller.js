@@ -39,12 +39,14 @@ exports.getPlaceById = (req, res) => {
     })
 }
 
-function filterByPlaceParameters(places, req) {
+/* ********** Find Place By Filters ************ */
+
+function filterByPlaceParameters (places, req) {
   return places.filter(function (place) {
-    const name = req.body.name ?? place.name
-    const province = req.body.province ?? place.province
-    const island = req.body.island ?? place.island
-    const municipality = req.body.municipality ?? place.municipality
+    const name = req.query.name ?? place.name
+    const province = req.query.province ?? place.province
+    const island = req.query.island ?? place.island
+    const municipality = req.query.municipality ?? place.municipality
 
     if (
       place.name.includes(name) &&
@@ -61,30 +63,30 @@ function filterByPlaceParameters(places, req) {
 function filterByBeachParameters (places, req) {
   return places.filter(function (place) {
     const beachSize = getBeachSize(place.placeId.length)
-    const size = req.body.size ?? beachSize
-    const occupation = req.body.occupation ?? place.placeId.occupation
-    const urbanization = req.body.urbanization ?? place.placeId.urbanization
-    const seaFront = req.body.seaFront ?? place.placeId.seaFront
-    const sandType = req.body.sandType ?? place.placeId.sandType
-    const surge = req.body.surge ?? place.placeId.surge
-    const nudism = req.body.nudism ?? place.placeId.nudism
-    const blueFlag = req.body.blueFlag ?? place.placeId.blueFlag
-    const lifeguard = req.body.lifeguard ?? place.placeId.lifeguard
-    const wayToAccess = req.body.wayToAccess ?? place.placeId.wayToAccess
+    const size = req.query.size ?? beachSize
+    const occupation = req.query.occupation ?? place.placeId.occupation
+    const urbanization = req.query.urbanization ?? place.placeId.urbanization
+    const seaFront = req.query.seaFront ?? place.placeId.seaFront
+    const sandType = req.query.sandType ?? place.placeId.sandType
+    const surge = req.query.surge ?? place.placeId.surge
+    const nudism = req.query.nudism ?? place.placeId.nudism
+    const blueFlag = req.query.blueFlag ?? place.placeId.blueFlag
+    const lifeguard = req.query.lifeguard ?? place.placeId.lifeguard
+    const wayToAccess = req.query.wayToAccess ?? place.placeId.wayToAccess
     const disabledAccess =
-      req.body.disabledAccess ?? place.placeId.disabledAccess
-    const parking = req.body.parking ?? place.placeId.parking
-    const showers = req.body.showers ?? place.placeId.showers
+      req.query.disabledAccess ?? place.placeId.disabledAccess
+    const parking = req.query.parking ?? place.placeId.parking
+    const showers = req.query.showers ?? place.placeId.showers
     const rentalSunUmbrella =
-      req.body.rentalSunUmbrella ?? place.placeId.rentalSunUmbrella
-    const rentalHamocks = req.body.rentalHamocks ?? place.placeId.rentalHamocks
-    const rentalBoats = req.body.rentalBoats ?? place.placeId.rentalBoats
-    const food = req.body.food ?? place.placeId.food
-    const drinks = req.body.drinks ?? place.placeId.drinks
-    const childZone = req.body.childZone ?? place.placeId.childZone
-    const sportZone = req.body.sportZone ?? place.placeId.sportZone
-    const scubaDiving = req.body.scubaDiving ?? place.placeId.scubaDiving
-    const surfZone = req.body.surfZone ?? place.placeId.surfZone
+      req.query.rentalSunUmbrella ?? place.placeId.rentalSunUmbrella
+    const rentalHamocks = req.query.rentalHamocks ?? place.placeId.rentalHamocks
+    const rentalBoats = req.query.rentalBoats ?? place.placeId.rentalBoats
+    const food = req.query.food ?? place.placeId.food
+    const drinks = req.query.drinks ?? place.placeId.drinks
+    const childZone = req.query.childZone ?? place.placeId.childZone
+    const sportZone = req.query.sportZone ?? place.placeId.sportZone
+    const scubaDiving = req.query.scubaDiving ?? place.placeId.scubaDiving
+    const surfZone = req.query.surfZone ?? place.placeId.surfZone
 
     if (
       size === beachSize &&
@@ -126,8 +128,8 @@ exports.getPlacesByParameters = (req, res) => {
     .populate("placeId")
     .then((places) => {
       let result = filterByPlaceParameters(places, req)
-      if (req.body.placeType) {
-        switch (req.body.placeType) {
+      if (req.query.placeType) {
+        switch (req.query.placeType) {
           case "beaches":
             result = filterByBeachParameters(result, req)
             break
@@ -147,7 +149,7 @@ exports.getPlacesByParameters = (req, res) => {
           coordX: place.coordX,
           coordY: place.coordY,
           placeType: place.placeType,
-          imageUrl: place.imageUrl,
+          imageUrl: place.imageUrl
         }
         return result
       })
@@ -161,7 +163,7 @@ exports.getPlacesByParameters = (req, res) => {
 
 /* ********** Post Place ************ */
 
-function createBeach(req) {
+function createBeach (req) {
   const beach = new BeachModel({
     municipalWeb: req.body.municipalWeb,
     length: req.body.length,
@@ -197,7 +199,7 @@ function createBeach(req) {
     surfZone: req.body.surfZone,
     composition: req.body.composition,
     facadeLitoral: req.body.facadeLitoral,
-    protectedSpace: req.body.protectedSpace,
+    protectedSpace: req.body.protectedSpace
   })
   beach.save()
   return beach.id
