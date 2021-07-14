@@ -2,113 +2,113 @@ const mongoose = require('mongoose')
 
 const beachSchema = new mongoose.Schema({
   imageUsersUrl: {
-    type: Array
+    type: Array,
   },
   municipalWeb: {
-    type: String
+    type: String,
   },
   length: {
-    type: String
+    type: String,
   },
   width: {
-    type: String
+    type: String,
   },
   occupation: {
-    type: String
+    type: String,
   },
   urbanization: {
-    type: String
+    type: String,
   },
   seaFront: {
-    type: String
+    type: String,
   },
   sandType: {
-    type: String
+    type: String,
   },
   surge: {
-    type: String
+    type: String,
   },
   zoneMarkedOut: {
-    type: String
+    type: String,
   },
   nudism: {
-    type: String
+    type: String,
   },
   vegetation: {
-    type: String
+    type: String,
   },
   blueFlag: {
-    type: String
+    type: String,
   },
   lifeguard: {
-    type: String
+    type: String,
   },
   wayToAccess: {
-    type: String
+    type: String,
   },
   disabledAccess: {
-    type: String
+    type: String,
   },
   parking: {
-    type: String
+    type: String,
   },
   parkingSlot: {
-    type: String
+    type: String,
   },
   toilet: {
-    type: String
+    type: String,
   },
   footWasher: {
-    type: String
+    type: String,
   },
   showers: {
-    type: String
+    type: String,
   },
   trashCan: {
-    type: String
+    type: String,
   },
   cleaningService: {
-    type: String
+    type: String,
   },
   rentalSunUmbrella: {
-    type: String
+    type: String,
   },
   rentalHamocks: {
-    type: String
+    type: String,
   },
   rentalBoats: {
-    type: String
+    type: String,
   },
   touristOffice: {
-    type: String
+    type: String,
   },
   food: {
-    type: String
+    type: String,
   },
   drinks: {
-    type: String
+    type: String,
   },
   childZone: {
-    type: String
+    type: String,
   },
   sportZone: {
-    type: String
+    type: String,
   },
   scubaDiving: {
-    type: String
+    type: String,
   },
   surfZone: {
-    type: String
+    type: String,
   },
   composition: {
-    type: String
+    type: String,
   },
   coastLine: {
-    type: String
+    type: String,
   },
   protectedSpace: {
-    type: String
-  }
+    type: String,
+  },
 })
 
 exports.BeachModel = mongoose.model('beaches', beachSchema)

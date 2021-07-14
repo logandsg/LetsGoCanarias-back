@@ -120,9 +120,6 @@ function filterByBeachParameters (places, req) {
 
 exports.getPlacesByParameters = (req, res) => {
   let findParameters = {}
-  if (req.query === undefined) {
-    res.status(200).json('')
-  }
   if (req.query.placeType) {
     findParameters = { placeType: req.query.placeType }
   }
@@ -167,6 +164,7 @@ exports.getPlacesByParameters = (req, res) => {
 
 function createBeach (req) {
   const beach = new BeachModel({
+    imageUsersUrl: req.body.imageUsersUrl,
     municipalWeb: req.body.municipalWeb,
     length: req.body.length,
     width: req.body.width,
@@ -207,11 +205,41 @@ function createBeach (req) {
   return beach.id
 }
 
+function createRestaurant (req) {
+  const restaurant = new RestaurantModel({
+    imageUsersUrl: req.body.imageUsersUrl,
+    price: req.body.price,
+    establishmentType: req.body.establishmentType,
+    cuisine: req.body.cuisine,
+    parking: req.body.parking,
+    specialty: req.body.specialty,
+    schedule: req.body.schedule,
+    disabledAccess: req.body.disabledAccess,
+    disabledBath: req.body.disabledBath,
+    petFriendly: req.body.petFriendly,
+    installationFeatures: req.body.installationFeatures,
+    web: req.body.web,
+    telephone: req.body.telephone,
+    address: req.body.address,
+    dayMenu: req.body.dayMenu,
+    vegetarianOption: req.body.vegetarianOption,
+    veganOption: req.body.veganOption,
+    halalOption: req.body.halalOption,
+    glutenFree: req.body.glutenFree,
+    meals: req.body.meals
+  })
+  restaurant.save()
+  return restaurant.id
+}
+
 exports.postPlace = (req, res) => {
   let newPlaceId
   switch (req.body.placeType) {
     case "beaches":
-      newPlaceId = createBeach(req, res)
+      newPlaceId = createBeach(req)
+      break
+    case "restaurants":
+      newPlaceId = createRestaurant(req)
       break
   }
   PlaceModel.create({
@@ -227,7 +255,7 @@ exports.postPlace = (req, res) => {
     spindle: req.body.spindle,
     imageUrl: req.body.imageUrl,
     placeType: req.body.placeType,
-    placeId: newPlaceId,
+    placeId: newPlaceId
   })
     .then((place) => res.status(200).json(place))
     .catch((err) => {
@@ -238,8 +266,9 @@ exports.postPlace = (req, res) => {
 
 /* ********** update Place ************ */
 
-function updateBeach(beachId, req) {
+function updateBeach (beachId, req) {
   BeachModel.findById(beachId).then((beach) => {
+    beach.imageUsersUrl = req.body.imageUsersUrl ?? beach.imageUsersUrl
     beach.municipalWeb = req.body.municipalWeb ?? beach.municipalWeb
     beach.length = req.body.length ?? beach.length
     beach.width = req.body.width ?? beach.width
@@ -262,8 +291,7 @@ function updateBeach(beachId, req) {
     beach.showers = req.body.showers ?? beach.showers
     beach.paperBind = req.body.paperBind ?? beach.paperBind
     beach.cleaningService = req.body.cleaningService ?? beach.cleaningService
-    beach.rentalSunUmbrella =
-      req.body.rentalSunUmbrella ?? beach.rentalSunUmbrella
+    beach.rentalSunUmbrella = req.body.rentalSunUmbrella ?? beach.rentalSunUmbrella
     beach.rentalHamocks = req.body.rentalHamocks ?? beach.rentalHamocks
     beach.rentalBoats = req.body.rentalBoats ?? beach.rentalBoats
     beach.touristOffice = req.body.touristOffice ?? beach.touristOffice
@@ -280,12 +308,41 @@ function updateBeach(beachId, req) {
   })
 }
 
+function updateRestaurant (restaurantId, req) {
+  RestaurantModel.findById(restaurantId).then((restaurant) => {
+    restaurant.imageUsersUrl = req.body.imageUsers ?? restaurant.imageUsersUrl
+    restaurant.price = req.body.price ?? restaurant.price
+    restaurant.establishmentType = req.body.establishmentType ?? restaurant.establishmentType
+    restaurant.cuisine = req.body.cuisine ?? restaurant.cuisine
+    restaurant.parking = req.body.parking ?? restaurant.parking
+    restaurant.specialty = req.body.specialty ?? restaurant.specialty
+    restaurant.schedule = req.body.schedule ?? restaurant.schedule
+    restaurant.disabledAccess = req.body.disabledAccess ?? restaurant.disabledAccess
+    restaurant.disabledBath = req.body.disabledBath ?? restaurant.disabledBath
+    restaurant.petFriendly = req.body.petFriendly ?? restaurant.petFriendly
+    restaurant.installationFeatures = req.body.installationFeatures ?? restaurant.installationFeatures
+    restaurant.web = req.body.web ?? restaurant.web
+    restaurant.telephone = req.body.telephone ?? restaurant.telephone
+    restaurant.address = req.body.address ?? restaurant.address
+    restaurant.dayMenu = req.body.dayMenu ?? restaurant.dayMenu
+    restaurant.veganOption = req.body.veganOption ?? restaurant.veganOption
+    restaurant.vegetarianOption = req.body.vegetarianOption ?? restaurant.vegetarianOption
+    restaurant.halalOption = req.body.halalOption ?? restaurant.halalOption
+    restaurant.glutenFree = req.body.glutenFree ?? restaurant.glutenFree
+    restaurant.meals = req.body.meals ?? restaurant.meals
+    restaurant.save()
+  })
+}
+
 exports.updatePlace = (req, res) => {
   PlaceModel.findById(req.params.idPlace)
     .then((place) => {
       switch (place.placeType) {
         case "beaches":
           updateBeach(place.placeId, req)
+          break
+        case "restaurants":
+          updateRestaurant(place.placeId, req)
           break
       }
       place.name = req.body.name ?? place.name
