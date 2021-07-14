@@ -120,10 +120,12 @@ function filterByBeachParameters (places, req) {
 
 exports.getPlacesByParameters = (req, res) => {
   let findParameters = {}
-  if (req.body.placeType) {
-    findParameters = { placeType: req.body.placeType }
+  if (req.query === undefined) {
+    res.status(200).json('')
   }
-
+  if (req.query.placeType) {
+    findParameters = { placeType: req.query.placeType }
+  }
   PlaceModel.find(findParameters)
     .populate("placeId")
     .then((places) => {
