@@ -49,7 +49,7 @@ function filterByPlaceParameters (places, req) {
     const municipality = req.query.municipality ?? place.municipality
 
     if (
-      place.name.includes(name) &&
+      place.name.toLowerCase().includes(name.toLowerCase()) &&
       province === place.province &&
       island === place.island &&
       municipality === place.municipality
@@ -118,6 +118,55 @@ function filterByBeachParameters (places, req) {
   })
 }
 
+function filterByRestaurantParameters (places, req) {
+  return places.filter(function (place) {
+    const price = req.body.price ?? place.placeId.price
+    const establishmentType = req.body.establishmentType ?? place.placeId.establishmentType
+    const cuisine = req.body.cuisine ?? place.placeId.cuisine
+    const parking = req.body.parking ?? place.placeId.parking
+    const specialty = req.body.specialty ?? place.placeId.specialty
+    const schedule = req.body.schedule ?? place.placeId.schedule
+    const disabledAccess = req.body.disabledAccess ?? place.placeId.disabledAccess
+    const disabledBath = req.body.disabledBath ?? place.placeId.disabledBath
+    const petFriendly = req.body.petFriendly ?? place.placeId.petFriendly
+    const installationFeatures = req.body.installationFeatures ?? place.placeId.installationFeatures
+    const web = req.body.web ?? place.placeId.web
+    const telephone = req.body.telephone ?? place.placeId.telephone
+    const address = req.body.address ?? place.placeId.address
+    const dayMenu = req.body.dayMenu ?? place.placeId.dayMenu
+    const vegetarianOption = req.body.vegetarianOption ?? place.placeId.vegetarianOption
+    const veganOption = req.body.veganOption ?? place.placeId.veganOption
+    const halalOption = req.body.halalOption ?? place.placeId.halalOption
+    const glutenFree = req.body.glutenFree ?? place.placeId.glutenFree
+    const meals = req.body.meals ?? place.placeId.meals
+
+    if (
+      price === place.placeId.price &&
+      establishmentType ===  place.placeId.establishmentType &&
+      cuisine === place.placeId.cuisine &&
+      parking === place.placeId.parking &&
+      specialty === place.placeId.specialty &&
+      schedule === place.placeId.schedule &&
+      disabledAccess === place.placeId.disabledAccess &&
+      disabledBath === place.placeId.disabledBath &&
+      petFriendly === place.placeId.petFriendly &&
+      installationFeatures === place.placeId.installationFeatures &&
+      web === place.placeId.web &&
+      telephone ===  place.placeId.telephone &&
+      address === place.placeId.address &&
+      dayMenu === place.placeId.dayMenu &&
+      vegetarianOption ===  place.placeId.vegetarianOption &&
+      veganOption === place.placeId.veganOption &&
+      halalOption === place.placeId.halalOption &&
+      glutenFree === place.placeId.glutenFree &&
+      meals === place.placeId.meals
+    ) {
+      return true
+    }
+    return false
+  })
+}
+
 exports.getPlacesByParameters = (req, res) => {
   let findParameters = {}
   if (req.query.placeType) {
@@ -131,6 +180,9 @@ exports.getPlacesByParameters = (req, res) => {
         switch (req.query.placeType) {
           case "beaches":
             result = filterByBeachParameters(result, req)
+            break
+          case "restaurants":
+            result = filterByRestaurantParameters (result, req)
             break
         }
       }
@@ -373,6 +425,11 @@ exports.deletePlace = (req, res) => {
       switch (place.placeType) {
         case "beaches":
           BeachModel.findByIdAndRemove(place.placeId).catch((err) => {
+            console.log(err)
+          })
+          break
+        case "restaurants":
+          RestaurantModel.findByIdAndRemove(place.placeId).catch((err) => {
             console.log(err)
           })
           break
