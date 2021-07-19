@@ -19,6 +19,16 @@ function convertLengthToNumber (length) {
   return parseInt(arrStr[0].replace(".", ""))
 }
 
+function isInArray(elem, arr) {
+  const elemLowerCase = elem.toLowerCase()
+  for(let i = 0; i < arr.length; i++) {
+    if (arr[i].toLowerCase().includes(elemLowerCase)) {
+      return true
+    }
+  }
+  return false
+}
+
 exports.getAllPlaces = (req, res) => {
   PlaceModel.find()
     .populate("placeId")
@@ -138,7 +148,8 @@ function filterByRestaurantParameters (places, req) {
     const veganOption = req.body.veganOption ?? place.placeId.veganOption
     const halalOption = req.body.halalOption ?? place.placeId.halalOption
     const glutenFree = req.body.glutenFree ?? place.placeId.glutenFree
-    const meals = req.body.meals ?? place.placeId.meals
+    const meals = req.body.meals ?? place.placeId.meals[0]
+    const menu = req.body.menu ?? place.placeId.menu[0]
 
     if (
       price === place.placeId.price &&
@@ -159,7 +170,8 @@ function filterByRestaurantParameters (places, req) {
       veganOption === place.placeId.veganOption &&
       halalOption === place.placeId.halalOption &&
       glutenFree === place.placeId.glutenFree &&
-      meals === place.placeId.meals
+      isInArray(meals, place.placeId.meals) &&
+      isInArray(menu, place.placeId.menu)
     ) {
       return true
     }
@@ -278,7 +290,8 @@ function createRestaurant (req) {
     veganOption: req.body.veganOption,
     halalOption: req.body.halalOption,
     glutenFree: req.body.glutenFree,
-    meals: req.body.meals
+    meals: req.body.meals,
+    menu: req.body.menu
   })
   restaurant.save()
   return restaurant.id
@@ -382,6 +395,7 @@ function updateRestaurant (restaurantId, req) {
     restaurant.halalOption = req.body.halalOption ?? restaurant.halalOption
     restaurant.glutenFree = req.body.glutenFree ?? restaurant.glutenFree
     restaurant.meals = req.body.meals ?? restaurant.meals
+    restaurant.menu = req.body.menu ?? restaurant.menu
     restaurant.save()
   })
 }
