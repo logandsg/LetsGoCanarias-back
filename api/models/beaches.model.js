@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const beachSchema = new mongoose.Schema({
   imageUsersUrl: {
     type: Array,
+    default: []
   },
   municipalWeb: {
     type: String,
@@ -103,12 +104,9 @@ const beachSchema = new mongoose.Schema({
   composition: {
     type: String,
   },
-  coastLine: {
-    type: String,
-  },
   protectedSpace: {
     type: String,
-  },
+  }
 })
 
 exports.BeachModel = mongoose.model('beaches', beachSchema)

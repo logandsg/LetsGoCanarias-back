@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 
 const museumSchema = new mongoose.Schema({
   imageUsersUrl: {
-    type: Array
+    type: Array,
+    default: []
   },
   web: {
     type: String
