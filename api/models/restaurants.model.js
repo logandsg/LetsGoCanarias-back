@@ -57,6 +57,9 @@ const restaurantSchema = new mongoose.Schema({
   },
   meals: {
     type: Array
+  },
+  menu: {
+    type: Array
   }
 })
 

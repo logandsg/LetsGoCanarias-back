@@ -2,7 +2,7 @@ const { PlaceModel } = require("../models/places.model")
 const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 
-function getBeachSize(length) {
+function getBeachSize (length) {
   console.log(length)
   const number = convertLengthToNumber(length)
   if (number > 200) {
@@ -17,6 +17,16 @@ function getBeachSize(length) {
 function convertLengthToNumber (length) {
   const arrStr = length.split(" ")
   return parseInt(arrStr[0].replace(".", ""))
+}
+
+function isInArray(elem, arr) {
+  const elemLowerCase = elem.toLowerCase()
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].toLowerCase().includes(elemLowerCase)) {
+      return true
+    }
+  }
+  return false
 }
 
 exports.getAllPlaces = (req, res) => {
@@ -120,25 +130,26 @@ function filterByBeachParameters (places, req) {
 
 function filterByRestaurantParameters (places, req) {
   return places.filter(function (place) {
-    const price = req.body.price ?? place.placeId.price
-    const establishmentType = req.body.establishmentType ?? place.placeId.establishmentType
-    const cuisine = req.body.cuisine ?? place.placeId.cuisine
-    const parking = req.body.parking ?? place.placeId.parking
-    const specialty = req.body.specialty ?? place.placeId.specialty
-    const schedule = req.body.schedule ?? place.placeId.schedule
-    const disabledAccess = req.body.disabledAccess ?? place.placeId.disabledAccess
-    const disabledBath = req.body.disabledBath ?? place.placeId.disabledBath
-    const petFriendly = req.body.petFriendly ?? place.placeId.petFriendly
-    const installationFeatures = req.body.installationFeatures ?? place.placeId.installationFeatures
-    const web = req.body.web ?? place.placeId.web
-    const telephone = req.body.telephone ?? place.placeId.telephone
-    const address = req.body.address ?? place.placeId.address
-    const dayMenu = req.body.dayMenu ?? place.placeId.dayMenu
-    const vegetarianOption = req.body.vegetarianOption ?? place.placeId.vegetarianOption
-    const veganOption = req.body.veganOption ?? place.placeId.veganOption
-    const halalOption = req.body.halalOption ?? place.placeId.halalOption
-    const glutenFree = req.body.glutenFree ?? place.placeId.glutenFree
-    const meals = req.body.meals ?? place.placeId.meals
+    const price = req.query.price ?? place.placeId.price
+    const establishmentType = req.query.establishmentType ?? place.placeId.establishmentType
+    const cuisine = req.query.cuisine ?? place.placeId.cuisine
+    const parking = req.query.parking ?? place.placeId.parking
+    const specialty = req.query.specialty ?? place.placeId.specialty
+    const schedule = req.query.schedule ?? place.placeId.schedule
+    const disabledAccess = req.query.disabledAccess ?? place.placeId.disabledAccess
+    const disabledBath = req.query.disabledBath ?? place.placeId.disabledBath
+    const petFriendly = req.query.petFriendly ?? place.placeId.petFriendly
+    const installationFeatures = req.query.installationFeatures ?? place.placeId.installationFeatures
+    const web = req.query.web ?? place.placeId.web
+    const telephone = req.query.telephone ?? place.placeId.telephone
+    const address = req.query.address ?? place.placeId.address
+    const dayMenu = req.query.dayMenu ?? place.placeId.dayMenu
+    const vegetarianOption = req.query.vegetarianOption ?? place.placeId.vegetarianOption
+    const veganOption = req.query.veganOption ?? place.placeId.veganOption
+    const halalOption = req.query.halalOption ?? place.placeId.halalOption
+    const glutenFree = req.query.glutenFree ?? place.placeId.glutenFree
+    const meals = req.query.meals ?? place.placeId.meals[0]
+    const menu = req.query.menu ?? place.placeId.menu[0]
 
     if (
       price === place.placeId.price &&
@@ -159,7 +170,8 @@ function filterByRestaurantParameters (places, req) {
       veganOption === place.placeId.veganOption &&
       halalOption === place.placeId.halalOption &&
       glutenFree === place.placeId.glutenFree &&
-      meals === place.placeId.meals
+      isInArray(meals, place.placeId.meals) &&
+      isInArray(menu, place.placeId.menu)
     ) {
       return true
     }
@@ -278,7 +290,8 @@ function createRestaurant (req) {
     veganOption: req.body.veganOption,
     halalOption: req.body.halalOption,
     glutenFree: req.body.glutenFree,
-    meals: req.body.meals
+    meals: req.body.meals,
+    menu: req.body.menu
   })
   restaurant.save()
   return restaurant.id
@@ -382,6 +395,7 @@ function updateRestaurant (restaurantId, req) {
     restaurant.halalOption = req.body.halalOption ?? restaurant.halalOption
     restaurant.glutenFree = req.body.glutenFree ?? restaurant.glutenFree
     restaurant.meals = req.body.meals ?? restaurant.meals
+    restaurant.menu = req.body.menu ?? restaurant.menu
     restaurant.save()
   })
 }
