@@ -4,9 +4,6 @@ const { isValidEmail } = require('../../utils')
 const { UserModel } = require('../models/users.model')
 
 exports.login = (req, res) => {
-  console.log(req.body)
-  console.log(req.headers)
-
   UserModel
     .findOne({ email: req.body.email })
     .then(user => {

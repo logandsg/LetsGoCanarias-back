@@ -5,7 +5,6 @@ const { MuseumModel } = require("../models/museums.model")
 const { ViewpointModel } = require("../models/viewpoints.model")
 
 function getBeachSize (length) {
-  console.log(length)
   const number = convertLengthToNumber(length)
   if (number > 200) {
     return "Grande"
@@ -199,7 +198,6 @@ exports.getPlacesByParameters = (req, res) => {
             result = filterByBeachParameters(result, req)
             break
           case "restaurants":
-          console.log('h')
             result = filterByRestaurantParameters (result, req)
             break
         }

@@ -5,7 +5,6 @@ const { UserModel } = require('../api/models/users.model')
 
 exports.checkAuth = (req, res, next) => {
   jwt.verify(req.headers.authorization, process.env.SECRET, (err, token) => {
-    console.log('token--------------------', token)
     if (err) { res.status(403).json({ error: 'Token not valid' }) }
     UserModel
       .findOne({ email: token.email })
