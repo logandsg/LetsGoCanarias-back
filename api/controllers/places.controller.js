@@ -2,6 +2,7 @@ const { PlaceModel } = require("../models/places.model")
 const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 const { MuseumModel } = require("../models/museums.model")
+const { ViewpointModel } = require("../models/viewpoints.model")
 
 function getBeachSize (length) {
   console.log(length)
@@ -20,7 +21,10 @@ function convertLengthToNumber (length) {
   return parseInt(arrStr[0].replace(".", ""))
 }
 
-function isInArray(elem, arr) {
+function isInArrayOrIsNull (elem, arr) {
+  if (elem === undefined) {
+    return true
+  }
   const elemLowerCase = elem.toLowerCase()
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].toLowerCase().includes(elemLowerCase)) {
@@ -131,26 +135,26 @@ function filterByBeachParameters (places, req) {
 
 function filterByRestaurantParameters (places, req) {
   return places.filter(function (place) {
-    const price = req.body.price ?? place.placeId.price
-    const establishmentType = req.body.establishmentType ?? place.placeId.establishmentType
-    const cuisine = req.body.cuisine ?? place.placeId.cuisine
-    const parking = req.body.parking ?? place.placeId.parking
-    const specialty = req.body.specialty ?? place.placeId.specialty
-    const schedule = req.body.schedule ?? place.placeId.schedule
-    const disabledAccess = req.body.disabledAccess ?? place.placeId.disabledAccess
-    const disabledBath = req.body.disabledBath ?? place.placeId.disabledBath
-    const petFriendly = req.body.petFriendly ?? place.placeId.petFriendly
-    const installationFeatures = req.body.installationFeatures ?? place.placeId.installationFeatures
-    const web = req.body.web ?? place.placeId.web
-    const telephone = req.body.telephone ?? place.placeId.telephone
-    const address = req.body.address ?? place.placeId.address
-    const dayMenu = req.body.dayMenu ?? place.placeId.dayMenu
-    const vegetarianOption = req.body.vegetarianOption ?? place.placeId.vegetarianOption
-    const veganOption = req.body.veganOption ?? place.placeId.veganOption
-    const halalOption = req.body.halalOption ?? place.placeId.halalOption
-    const glutenFree = req.body.glutenFree ?? place.placeId.glutenFree
-    const meals = req.body.meals ?? place.placeId.meals[0]
-    const menu = req.body.menu ?? place.placeId.menu[0]
+    const price = req.query.price ?? place.placeId.price
+    const establishmentType = req.query.establishmentType ?? place.placeId.establishmentType
+    const cuisine = req.query.cuisine ?? place.placeId.cuisine
+    const parking = req.query.parking ?? place.placeId.parking
+    const specialty = req.query.specialty ?? place.placeId.specialty
+    const schedule = req.query.schedule ?? place.placeId.schedule
+    const disabledAccess = req.query.disabledAccess ?? place.placeId.disabledAccess
+    const disabledBath = req.query.disabledBath ?? place.placeId.disabledBath
+    const petFriendly = req.query.petFriendly ?? place.placeId.petFriendly
+    const installationFeatures = req.query.installationFeatures ?? place.placeId.installationFeatures
+    const web = req.query.web ?? place.placeId.web
+    const telephone = req.query.telephone ?? place.placeId.telephone
+    const address = req.query.address ?? place.placeId.address
+    const dayMenu = req.query.dayMenu ?? place.placeId.dayMenu
+    const vegetarianOption = req.query.vegetarianOption ?? place.placeId.vegetarianOption
+    const veganOption = req.query.veganOption ?? place.placeId.veganOption
+    const halalOption = req.query.halalOption ?? place.placeId.halalOption
+    const glutenFree = req.query.glutenFree ?? place.placeId.glutenFree
+    const meals = req.query.meals ?? place.placeId.meals[0]
+    const menu = req.query.menu ?? place.placeId.menu[0]
 
     if (
       price === place.placeId.price &&
@@ -171,8 +175,8 @@ function filterByRestaurantParameters (places, req) {
       veganOption === place.placeId.veganOption &&
       halalOption === place.placeId.halalOption &&
       glutenFree === place.placeId.glutenFree &&
-      isInArray(meals, place.placeId.meals) &&
-      isInArray(menu, place.placeId.menu)
+      isInArrayOrIsNull(meals, place.placeId.meals) &&
+      isInArrayOrIsNull(menu, place.placeId.menu)
     ) {
       return true
     }
@@ -183,18 +187,19 @@ function filterByRestaurantParameters (places, req) {
 exports.getPlacesByParameters = (req, res) => {
   let findParameters = {}
   if (req.query.placeType) {
-    findParameters = { placeType: req.body.placeType }
+    findParameters = { placeType: req.query.placeType }
   }
   PlaceModel.find(findParameters)
     .populate("placeId")
     .then((places) => {
       let result = filterByPlaceParameters(places, req)
-      if (req.body.placeType) {
-        switch (req.body.placeType) {
+      if (req.query.placeType) {
+        switch (req.query.placeType) {
           case "beaches":
             result = filterByBeachParameters(result, req)
             break
           case "restaurants":
+          console.log('h')
             result = filterByRestaurantParameters (result, req)
             break
         }
@@ -301,29 +306,19 @@ function createRestaurant (req) {
 function createMuseum (req) {
   const museum = new MuseumModel({
     imageUsersUrl: req.body.imageUsersUrl,
-    price: req.body.price,
-    establishmentType: req.body.establishmentType,
-    cuisine: req.body.cuisine,
-    parking: req.body.parking,
-    specialty: req.body.specialty,
-    schedule: req.body.schedule,
-    disabledAccess: req.body.disabledAccess,
-    disabledBath: req.body.disabledBath,
-    petFriendly: req.body.petFriendly,
-    installationFeatures: req.body.installationFeatures,
     web: req.body.web,
-    telephone: req.body.telephone,
-    address: req.body.address,
-    dayMenu: req.body.dayMenu,
-    vegetarianOption: req.body.vegetarianOption,
-    veganOption: req.body.veganOption,
-    halalOption: req.body.halalOption,
-    glutenFree: req.body.glutenFree,
-    meals: req.body.meals,
-    menu: req.body.menu
+    address: req.body.address
   })
   museum.save()
   return museum.id
+}
+
+function createViewpoint (req) {
+  const viewpoint = new ViewpointModel({
+    imageUsersUrl: req.body.imageUsersUrl,
+  })
+  viewpoint.save()
+  return viewpoint.id
 }
 
 exports.postPlace = (req, res) => {
@@ -337,6 +332,9 @@ exports.postPlace = (req, res) => {
       break
     case "museums":
       newPlaceId = createMuseum(req)
+      break
+    case "viewpoints":
+      newPlaceId = createViewpoint(req)
       break
   }
   PlaceModel.create({
@@ -441,6 +439,13 @@ function updateMuseum (museumId, req) {
   })
 }
 
+function updateViewpoint (viewpointId, req) {
+  ViewpointModel.findById(viewpointId).then((viewpoint) => {
+    viewpoint.imageUsersUrl = req.body.imageUsers ?? viewpoint.imageUsersUrl
+    viewpoint.save()
+  })
+}
+
 exports.updatePlace = (req, res) => {
   PlaceModel.findById(req.params.idPlace)
     .then((place) => {
@@ -453,6 +458,9 @@ exports.updatePlace = (req, res) => {
           break
         case "museums":
           updateMuseum(place.placeId, req)
+          break
+        case "viewpoints":
+          updateViewpoint(place.placeId, req)
           break
       }
       place.name = req.body.name ?? place.name
@@ -493,6 +501,11 @@ exports.deletePlace = (req, res) => {
           break
         case "museums":
           MuseumModel.findByIdAndRemove(place.placeId).catch((err) => {
+            console.log(err)
+          })
+          break
+        case "viewpoints":
+          ViewpointModel.findByIdAndRemove(place.placeId).catch((err) => {
             console.log(err)
           })
           break
