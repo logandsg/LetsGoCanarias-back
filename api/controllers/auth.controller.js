@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
+const { isValidEmail } = require('../../utils')
 const { UserModel } = require('../models/users.model')
 
 exports.login = (req, res) => {
@@ -28,6 +28,49 @@ exports.login = (req, res) => {
     .catch(err => {
       console.log(err)
       res.status(500).json({ err: 'Error' })
+    })
+}
+
+exports.signup = (req, res) => {
+  const hashedPwd = bcrypt.hashSync(req.body.password, 10)
+  UserModel
+    .findOne({ email: req.body.email })
+    .then(user => {
+      if (user) {
+        res.status(409).json({ err: 'Email already exists. Try another one' })
+      } else {
+        if (isValidEmail(req.body.email)) {
+          UserModel
+            .create({
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              nickName: req.body.nickName,
+              rol: req.body.rol,
+              email: req.body.email,
+              password: hashedPwd
+            })
+            .then(user => {
+              const userData = { rol: user.rol, email: user.email }
+
+              const token = jwt.sign(
+                userData,
+                process.env.SECRET,
+                { expiresIn: '1h' }
+              )
+              return res.status(200).json({ token: token, ...userData })
+            })
+            .catch(err => {
+              console.log(err)
+              res.status(500).json({ msg: 'Error' })
+            })
+        } else {
+          res.status(409).json({ err: 'Wrong email format' })
+        }
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({ msg: 'Error' })
     })
 }
 
