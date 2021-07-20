@@ -4,6 +4,9 @@ const { isValidEmail } = require('../../utils')
 const { UserModel } = require('../models/users.model')
 
 exports.login = (req, res) => {
+  console.log(req.body)
+  console.log(req.headers)
+
   UserModel
     .findOne({ email: req.body.email })
     .then(user => {
@@ -76,10 +79,12 @@ exports.signup = (req, res) => {
 
 exports.profile = (req, res) => {
   res.status(200).json({
-    firstName: res.locals.user.firstName,
-    lastName: res.locals.user.lastName,
-    rol: res.locals.user.rol,
-    email: res.locals.user.email,
-    nickName: res.locals.user.nickName
+    user: {
+      firstName: res.locals.user.firstName,
+      lastName: res.locals.user.lastName,
+      rol: res.locals.user.rol,
+      email: res.locals.user.email,
+      nickName: res.locals.user.nickName
+    }
   })
 }
