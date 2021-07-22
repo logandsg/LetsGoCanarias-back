@@ -49,7 +49,7 @@ const restaurantSchema = new mongoose.Schema({
   veganOption: {
     type: String
   },
-  halalOption: {
+  parking: {
     type: String
   },
   glutenFree: {
