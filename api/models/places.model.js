@@ -39,7 +39,7 @@ const placeSchema = new mongoose.Schema({
   },
   placeType: {
     type: String,
-    enum: ['beaches', 'restaurants']
+    enum: ['beaches', 'restaurants', 'museums', 'viewpoints']
   },
   placeId: {
     type: mongoose.Schema.Types.ObjectId,

@@ -10,6 +10,9 @@ const museumSchema = new mongoose.Schema({
   },
   address: {
     type: String
+  },
+  telephone: {
+    type: String
   }
 })
 
