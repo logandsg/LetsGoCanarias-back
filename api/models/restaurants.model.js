@@ -57,7 +57,8 @@ const restaurantSchema = new mongoose.Schema({
   },
   meals: {
     type: Array,
-    default: []
+    default: [],
+    enum: ['Desayuno', 'Cena', 'Almuerzo', 'Branch']
   },
   menu: {
     type: Array,

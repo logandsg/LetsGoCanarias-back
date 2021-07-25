@@ -44,7 +44,11 @@ const placeSchema = new mongoose.Schema({
   placeId: {
     type: mongoose.Schema.Types.ObjectId,
     refPath: 'placeType'
-  }
+  },
+  comments: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'comments'
+  }]
 })
 
 exports.PlaceModel = mongoose.model('places', placeSchema)
