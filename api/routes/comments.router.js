@@ -4,7 +4,7 @@ const {
   addComment,
   updateComment,
   deleteComment
-} = require('../controllers/users.controller')
+} = require('../controllers/comments.controller')
 
 commentsRouter.post('/', addComment)
 commentsRouter.put('/:idComment', updateComment)

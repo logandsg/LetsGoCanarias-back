@@ -25,14 +25,15 @@ const placeSchema = new mongoose.Schema({
   coordLatitude: {
     type: String
   },
-  coordLength: {
+  coordLongitude: {
     type: String
   },
   spindle: {
     type: String
   },
   rate: {
-    type: Number
+    type: Number,
+    default: 0
   },
   imageUrl: {
     type: String
@@ -48,7 +49,10 @@ const placeSchema = new mongoose.Schema({
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'comments'
-  }]
+  }],
+  createdAt: {
+    type: Date
+  }
 })
 
 exports.PlaceModel = mongoose.model('places', placeSchema)

@@ -46,6 +46,7 @@ exports.getAllPlaces = (req, res) => {
 exports.getPlaceById = (req, res) => {
   PlaceModel.findById(req.params.idPlace)
     .populate("placeId")
+    .populate('comments')
     .then((places) => res.status(200).json(places))
     .catch((err) => {
       console.log(err)
@@ -157,7 +158,7 @@ function filterByRestaurantParameters (places, req) {
 
     if (
       price === place.placeId.price &&
-      establishmentType ===  place.placeId.establishmentType &&
+      establishmentType === place.placeId.establishmentType &&
       cuisine === place.placeId.cuisine &&
       parking === place.placeId.parking &&
       specialty === place.placeId.specialty &&
@@ -189,7 +190,7 @@ exports.getPlacesByParameters = (req, res) => {
     findParameters = { placeType: req.query.placeType }
   }
   PlaceModel.find(findParameters)
-    .populate("placeId")
+    .populate('placeId')
     .then((places) => {
       let result = filterByPlaceParameters(places, req)
       if (req.query.placeType) {
@@ -216,7 +217,8 @@ exports.getPlacesByParameters = (req, res) => {
           coordX: place.coordX,
           coordY: place.coordY,
           placeType: place.placeType,
-          imageUrl: place.imageUrl
+          imageUrl: place.imageUrl,
+          createdAt: place.createdAt
         }
         return result
       })
@@ -348,7 +350,8 @@ exports.postPlace = (req, res) => {
     spindle: req.body.spindle,
     imageUrl: req.body.imageUrl,
     placeType: req.body.placeType,
-    placeId: newPlaceId
+    placeId: newPlaceId,
+    createdAt: new Date()
   })
     .then((place) => res.status(200).json(place))
     .catch((err) => {
@@ -472,6 +475,7 @@ exports.updatePlace = (req, res) => {
       place.coordLength = req.body.coordLength ?? place.coordLength
       place.spindle = req.body.spindle ?? place.spindle
       place.imageUrl = req.body.imageUrl ?? place.imageUrl
+      place.createdAt = new Date()
       place.save()
       res.status(200).json(place)
     })
