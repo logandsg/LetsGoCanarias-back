@@ -51,6 +51,10 @@ const placeSchema = new mongoose.Schema({
     ref: 'comments',
     default: []
   }],
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users'
+  },
   createdAt: {
     type: Date
   }
