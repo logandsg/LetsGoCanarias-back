@@ -3,7 +3,7 @@ const { PlaceModel } = require('../models/places.model')
 
 function reCalculateRate (place, userId, deletedCommentId, newRate) {
   const arrRatedComment = place.comments.filter(function (comment) {
-    if (comment.rate > 0 && comment.userId.toString() !== userId.toString() && comment.id.toString() !== deletedCommentId.toString()) {
+    if (comment.rate !== null && comment.userId.toString() !== userId.toString() && comment.id.toString() !== deletedCommentId.toString()) {
       return true
     }
     return false
@@ -26,9 +26,9 @@ function reCalculateRate (place, userId, deletedCommentId, newRate) {
   return 0
 }
 
-function setAllCommentToZeroRate (place, userId, commentId) {
+function setAllCommentToNullRate (place, userId, commentId) {
   const commentWithRate = place.comments.filter(function (comment) {
-    if (comment.userId.toString() === userId.toString() && comment.rate > 0 && comment.id.toString() !== commentId.toString()) {
+    if (comment.userId.toString() === userId.toString() && comment.rate !== null && comment.id.toString() !== commentId.toString()) {
       return true
     }
     return false
@@ -37,7 +37,7 @@ function setAllCommentToZeroRate (place, userId, commentId) {
     CommentModel
       .findById(commentWithRate[i].id)
       .then(comment => {
-        comment.rate = 0
+        comment.rate = null
         comment.save()
       })
       .catch(err => {
@@ -61,7 +61,7 @@ exports.addComment = (req, res) => {
         .populate('comments')
         .then(place => {
           if (req.body.rate !== null) {
-            setAllCommentToZeroRate(place, req.body.userId, comment.id)
+            setAllCommentToNullRate(place, req.body.userId, comment.id)
             place.rate = reCalculateRate(place, req.body.userId, 0, req.body.rate)
           }
           place.comments.push(comment.id)
@@ -92,8 +92,8 @@ exports.updateComment = (req, res) => {
           .findById(req.body.placeId)
           .populate('comments')
           .then(place => {
-            if (place.comments.length > 0 && req.body.rate > 0) {
-              setAllCommentToZeroRate(place, req.body.userId, comment.id)
+            if (place.comments.length > 0 && req.body.rate !== null) {
+              setAllCommentToNullRate(place, req.body.userId, req.params.idComment)
               place.rate = reCalculateRate(place, req.body.userId, 0, req.body.rate)
               place.save()
             }
