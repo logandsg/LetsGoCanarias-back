@@ -48,7 +48,8 @@ const placeSchema = new mongoose.Schema({
   },
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'comments'
+    ref: 'comments',
+    default: []
   }],
   createdAt: {
     type: Date
