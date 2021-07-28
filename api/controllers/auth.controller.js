@@ -81,7 +81,8 @@ exports.profile = (req, res) => {
       lastName: res.locals.user.lastName,
       rol: res.locals.user.rol,
       email: res.locals.user.email,
-      nickName: res.locals.user.nickName
+      nickName: res.locals.user.nickName,
+      favs: res.locals.user.favs
     }
   })
 }

@@ -111,3 +111,34 @@ exports.deleteUser = (req, res) => {
       res.status(500).json({ msg: 'Error' })
     })
 }
+
+exports.addFav = (req, res) => {
+  UserModel
+    .findById(res.locals.user._id)
+    .then(user => {
+      user.favs.push(req.body.favs)
+      user.save()
+      res.status(200).json({ msg: 'Favourite place added' })
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({ msg: 'Error' })
+    })
+}
+
+exports.delFav = (req, res) => {
+  console.log(req.body, '--------------------------------------------')
+  UserModel
+    .findById(res.locals.user._id)
+    .then(user => {
+      console.log(user.favs, 'before')
+      //user.favs.splice(user.favs.indexOf(req.body.favs), 1)
+      console.log(user.favs)
+      //user.save()
+      res.status(200).json({ msg: 'Favourite place deleted' })
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({ msg: 'Error' })
+    })
+}
