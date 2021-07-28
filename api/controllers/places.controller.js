@@ -439,8 +439,8 @@ function updateMuseum (museumId, req) {
   MuseumModel.findById(museumId).then((museum) => {
     museum.imageUsersUrl = req.body.imageUsers ?? museum.imageUsersUrl
     museum.web = req.body.web ?? museum.web
-    museum.address = req.body.address ?? museum.address,
-    museum.telephone: req.body.telephone ?? museum.telephone
+    museum.address = req.body.address ?? museum.address
+    museum.telephone = req.body.telephone ?? museum.telephone
     museum.save()
   })
 }
