@@ -3,6 +3,8 @@ const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 const { MuseumModel } = require("../models/museums.model")
 const { ViewpointModel } = require("../models/viewpoints.model")
+const { UserModel } = require("../models/viewpoints.model")
+const { CommentModel } = require("../models/comments.model")
 
 function getBeachSize (length) {
   const number = convertLengthToNumber(length)
@@ -36,7 +38,7 @@ function isInArrayOrIsNull (elem, arr) {
 exports.getAllPlaces = (req, res) => {
   PlaceModel.find()
     .populate("placeId")
-    .populate("comments")
+    .populate({ path: 'comments', model: CommentModel, populate: { path: 'userId', model: UserModel } })
     .then((places) => res.status(200).json(places))
     .catch((err) => {
       console.log(err)
@@ -47,7 +49,7 @@ exports.getAllPlaces = (req, res) => {
 exports.getPlaceById = (req, res) => {
   PlaceModel.findById(req.params.idPlace)
     .populate("placeId")
-    .populate('comments')
+    .populate({ path: 'comments', model: CommentModel, populate: { path: 'userId', model: UserModel } })
     .then((places) => res.status(200).json(places))
     .catch((err) => {
       console.log(err)

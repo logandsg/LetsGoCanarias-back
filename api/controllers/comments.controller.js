@@ -61,8 +61,8 @@ exports.addComment = (req, res) => {
         .populate('comments')
         .then(place => {
           if (req.body.rate !== null) {
-            setAllCommentToNullRate(place, req.body.userId, comment.id)
-            place.rate = reCalculateRate(place, req.body.userId, 0, req.body.rate)
+            setAllCommentToNullRate(place, res.locals.user._id, comment.id)
+            place.rate = reCalculateRate(place, res.locals.user._id, 0, req.body.rate)
           }
           place.comments.push(comment.id)
           place.save()
@@ -93,8 +93,8 @@ exports.updateComment = (req, res) => {
           .populate('comments')
           .then(place => {
             if (place.comments.length > 0 && req.body.rate !== null) {
-              setAllCommentToNullRate(place, req.body.userId, req.params.idComment)
-              place.rate = reCalculateRate(place, req.body.userId, 0, req.body.rate)
+              setAllCommentToNullRate(place, res.locals.user._id, req.params.idComment)
+              place.rate = reCalculateRate(place, res.locals.user._id, 0, req.body.rate)
               place.save()
             }
           })

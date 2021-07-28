@@ -30,10 +30,10 @@ mongoose.connect(
       .use(express.json())
       .use(express.static(path.join(__dirname, 'public')))
       .use('/api', router)
-      .listen(process.env.PORT || 3000, (err) => {
+      .listen(process.env.PORT || 1800, (err) => {
         console.info('\n\n' + '>'.repeat(40))
         console.info('💻  Reboot Server Live')
-        console.info('📡  PORT: http://localhost:3000')
+        console.info('📡  PORT: http://localhost:1800')
         console.info('>'.repeat(40) + '\n\n')
       })
   }
