@@ -1,4 +1,5 @@
 const commentsRouter = require('express').Router()
+const { checkAuth } = require('../../utils')
 
 const {
   addComment,
@@ -6,7 +7,7 @@ const {
   deleteComment
 } = require('../controllers/comments.controller')
 
-commentsRouter.post('/', addComment)
+commentsRouter.post('/', checkAuth, addComment)
 commentsRouter.put('/:idComment', updateComment)
 commentsRouter.delete('/:idComment', deleteComment)
 

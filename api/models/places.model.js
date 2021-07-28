@@ -17,10 +17,10 @@ const placeSchema = new mongoose.Schema({
     type: String
   },
   coordX: {
-    type: String
+    type: Number
   },
   coordY: {
-    type: String
+    type: Number
   },
   coordLatitude: {
     type: String

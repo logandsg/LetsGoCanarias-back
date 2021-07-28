@@ -199,7 +199,7 @@ exports.getPlacesByParameters = (req, res) => {
             result = filterByBeachParameters(result, req)
             break
           case "restaurants":
-            result = filterByRestaurantParameters (result, req)
+            result = filterByRestaurantParameters(result, req)
             break
         }
       }
