@@ -49,7 +49,7 @@ function setAllCommentToNullRate (place, userId, commentId) {
 exports.addComment = (req, res) => {
   CommentModel
     .create({
-      userId: req.body.userId,
+      userId: res.local.user._id,
       title: req.body.title,
       message: req.body.message,
       rate: req.body.rate,
