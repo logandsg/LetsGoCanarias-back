@@ -127,14 +127,11 @@ exports.addFav = (req, res) => {
 }
 
 exports.delFav = (req, res) => {
-  console.log(req.body, '--------------------------------------------')
   UserModel
     .findById(res.locals.user._id)
     .then(user => {
-      console.log(user.favs, 'before')
-      //user.favs.splice(user.favs.indexOf(req.body.favs), 1)
-      console.log(user.favs)
-      //user.save()
+      user.favs.splice(user.favs.indexOf(req.body.favs), 1)
+      user.save()
       res.status(200).json({ msg: 'Favourite place deleted' })
     })
     .catch(err => {
