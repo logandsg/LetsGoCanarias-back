@@ -36,6 +36,7 @@ function isInArrayOrIsNull (elem, arr) {
 exports.getAllPlaces = (req, res) => {
   PlaceModel.find()
     .populate("placeId")
+    .populate("comments")
     .then((places) => res.status(200).json(places))
     .catch((err) => {
       console.log(err)
