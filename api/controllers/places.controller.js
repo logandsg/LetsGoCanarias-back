@@ -310,7 +310,8 @@ function createMuseum (req) {
   const museum = new MuseumModel({
     imageUsersUrl: req.body.imageUsersUrl,
     web: req.body.web,
-    address: req.body.address
+    address: req.body.address,
+    telephone: req.body.telephone
   })
   museum.save()
   return museum.id
@@ -438,7 +439,8 @@ function updateMuseum (museumId, req) {
   MuseumModel.findById(museumId).then((museum) => {
     museum.imageUsersUrl = req.body.imageUsers ?? museum.imageUsersUrl
     museum.web = req.body.web ?? museum.web
-    museum.address = req.body.address ?? museum.address
+    museum.address = req.body.address ?? museum.address,
+    museum.telephone: req.body.telephone ?? museum.telephone
     museum.save()
   })
 }
