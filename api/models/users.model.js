@@ -27,7 +27,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['user', 'administrator']
-  }
+  },
+  favs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'places'
+  }]
 })
 
 exports.UserModel = mongoose.model('users', userSchema)
