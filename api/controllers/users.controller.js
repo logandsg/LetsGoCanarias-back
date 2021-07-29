@@ -139,3 +139,17 @@ exports.delFav = (req, res) => {
       res.status(500).json({ msg: 'Error' })
     })
 }
+
+exports.getFav = (req, res) => {
+  UserModel
+    .findById(res.locals.user._id)
+    .populate('favs')
+    .then(user => {
+      console.log(user)
+      res.status(200).json({ msg: 'Favourite place deleted' })
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({ msg: 'Error' })
+    })
+}

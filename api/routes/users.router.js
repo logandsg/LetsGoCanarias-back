@@ -8,10 +8,12 @@ const {
   getAllUsers,
   getUser,
   addFav,
-  delFav
+  delFav,
+  getFav
 } = require('../controllers/users.controller')
 
 usersRouter.get('/', getAllUsers)
+usersRouter.get('/favs', checkAuth, getFav)
 usersRouter.get('/:idUser', getUser)
 usersRouter.post('/', addUser)
 usersRouter.post('/favs', checkAuth, addFav)

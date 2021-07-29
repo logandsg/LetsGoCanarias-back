@@ -13,7 +13,7 @@ exports.login = (req, res) => {
             console.log(err)
             return res.status(403).json({ error: 'Wrong email or password' })
           }
-          const userData = { rol: user.rol, email: user.email, id: user._id }
+          const userData = { rol: user.rol, email: user.email, id: user._id, favs: user.favs}
           const token = jwt.sign(
             userData,
             process.env.SECRET, // TODO SECRET MORE SECRET PLEASE
