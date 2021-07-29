@@ -14,7 +14,6 @@ function reCalculateRate (place, userId, deletedCommentId, newRate) {
     for (let i = 0; i < arrRatedComment.length; i++) {
       totalSumRate += arrRatedComment[i].rate
     }
-    console.log(totalSumRate, arrRatedComment.length, newRate)
     if (newRate > 0) {
       return Math.floor((parseInt(totalSumRate) + parseInt(newRate)) / (arrRatedComment.length + 1))
     } else {
@@ -61,14 +60,12 @@ exports.addComment = (req, res) => {
         .findById(req.body.placeId)
         .populate({ path: 'comments', model: CommentModel, populate: { path: 'userId', model: UserModel } })
         .then(place => {
-          console.log(place, 'first-----------')
           if (req.body.rate !== null) {
             setAllCommentToNullRate(place, res.locals.user._id, comment.id)
             place.rate = reCalculateRate(place, res.locals.user._id, 0, req.body.rate)
           }
           place.comments.push(comment.id)
           place.save()
-          console.log(place, 'second-----------')
           CommentModel
             .findById(comment._id)
             .populate('userId')
@@ -126,7 +123,6 @@ exports.deleteComment = (req, res) => {
       PlaceModel
         .findById(req.body.placeId)
         .then(place => {
-          console.log(place.comments.indexOf(req.params.idComment))
           place.comments.splice(place.comments.indexOf(req.params.idComment), 1)
           place.save()
         })
