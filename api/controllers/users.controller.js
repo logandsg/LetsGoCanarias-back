@@ -118,7 +118,7 @@ exports.addFav = (req, res) => {
     .then(user => {
       user.favs.push(req.body.favs)
       user.save()
-      res.status(200).json({ msg: 'Favourite place added' })
+      res.status(200).json({ user })
     })
     .catch(err => {
       console.log(err)
@@ -132,7 +132,7 @@ exports.delFav = (req, res) => {
     .then(user => {
       user.favs.splice(user.favs.indexOf(req.body.favs), 1)
       user.save()
-      res.status(200).json({ msg: 'Favourite place deleted' })
+      res.status(200).json({ user })
     })
     .catch(err => {
       console.log(err)
