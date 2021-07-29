@@ -1,5 +1,6 @@
 const { CommentModel } = require('../models/comments.model')
 const { PlaceModel } = require('../models/places.model')
+const { UserModel } = require('../models/users.model')
 
 function reCalculateRate (place, userId, deletedCommentId, newRate) {
   const arrRatedComment = place.comments.filter(function (comment) {
@@ -58,15 +59,25 @@ exports.addComment = (req, res) => {
     .then(comment => {
       PlaceModel
         .findById(req.body.placeId)
-        .populate('comments')
+        .populate({ path: 'comments', model: CommentModel, populate: { path: 'userId', model: UserModel } })
         .then(place => {
+          console.log(place, 'first-----------')
           if (req.body.rate !== null) {
             setAllCommentToNullRate(place, res.locals.user._id, comment.id)
             place.rate = reCalculateRate(place, res.locals.user._id, 0, req.body.rate)
           }
           place.comments.push(comment.id)
           place.save()
-          res.status(200).json(comment)
+          console.log(place, 'second-----------')
+          CommentModel
+            .findById(comment._id)
+            .populate('userId')
+            .then(comment2 => {
+              res.status(200).json(comment2)
+            })
+            .catch(err => {
+              console.log(err)
+            })
         })
         .catch(err => {
           console.log(err)

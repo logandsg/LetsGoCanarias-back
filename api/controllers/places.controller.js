@@ -3,7 +3,7 @@ const { BeachModel } = require("../models/beaches.model")
 const { RestaurantModel } = require("../models/restaurants.model")
 const { MuseumModel } = require("../models/museums.model")
 const { ViewpointModel } = require("../models/viewpoints.model")
-const { UserModel } = require("../models/viewpoints.model")
+const { UserModel } = require("../models/users.model")
 const { CommentModel } = require("../models/comments.model")
 
 function getBeachSize (length) {
@@ -47,6 +47,7 @@ exports.getAllPlaces = (req, res) => {
 }
 
 exports.getPlaceById = (req, res) => {
+  console.log(req.params.idPlace)
   PlaceModel.findById(req.params.idPlace)
     .populate("placeId")
     .populate({ path: 'comments', model: CommentModel, populate: { path: 'userId', model: UserModel } })
