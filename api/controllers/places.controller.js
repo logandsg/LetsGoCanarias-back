@@ -222,7 +222,9 @@ exports.getPlacesByParameters = (req, res) => {
           coordY: place.coordY,
           placeType: place.placeType,
           imageUrl: place.imageUrl,
-          createdAt: place.createdAt
+          createdAt: place.createdAt,
+          rate: place.rate
+
         }
         return result
       })
